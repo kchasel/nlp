@@ -1,4 +1,4 @@
-// CS124 HW1 SpamLord
+	// CS124 HW1 SpamLord
 import java.util.regex.*;
 import java.util.Collections;
 import java.util.Arrays;
@@ -62,10 +62,10 @@ public class SpamLord {
   }
   
   // Example pattern for extracting e-mail addresses
-  private String dotfinder = "\\s|\\s(dot|DOT|DOM|dom)\\s|\\s?;\\s?";
-  private Pattern myFirstPattern = Pattern.compile("(^|\\b)([a-z0-9][\\w\\.]+)(\\s?\\(followed\\sby\\s(&ldquo;|\"))?\\s?(&#x40;|WHERE|@|\\sat\\s)\\s?(("+dotfinder+"|[\\w\\.])+)("+dotfinder+"|\\s?\\.\\s?)(edu|EDU)");
+  private String dotfinder = "\\s(dot|dt|DOT|DOM|dom)\\s|\\s?;\\s?";
+  private Pattern myFirstPattern = Pattern.compile("(^|\\b)([a-z0-9][\\w\\.]+)(\\s?\\(followed\\sby\\s(&ldquo;|\"))?\\s?(&#x40;|WHERE|@|\\sat\\s)\\s?(("+dotfinder+"|[\\w\\.])+)("+dotfinder+"|\\s?\\.\\s?)(edu|EDU|com)");
   private Pattern obfuscatePattern = Pattern.compile("obfuscate\\(['\"]([\\w\\.]+)['\"],\\s?['\"]([\\w\\.]+)");
-  // (^|\b)([a-z0-9][\w\.]+)(\s?\(followed\sby\s(&ldquo;|"))?\s?(&#x40;|WHERE|@|\sat\s)\s?(\s|\s(dot|DOT|DOM|dom|)\s|\s?;\s?|\s?\.\s?|([\w\.]+)+)+(\s(dot|DOT|DOM|dom)\s|\s?;\s?|\s?\.\s?|\s)(edu|EDU)
+  // (^|\b)([a-z0-9][\w\.]+)(\s?\(followed\sby\s(&ldquo;|"))?\s?(&#x40;|WHERE|@|\sat\s)\s?(\s(dot|DOT|DOM|dom|)\s|\s?;\s?|\s?\.\s?|([\w\.]+)+)+(\s(dot|DOT|DOM|dom)\s?;\s?|\s?\.\s?|\s)(edu|EDU)
   // obfuscate\(['\"]([\w\.]+)['\"],\s?['\"]([\w\.]+)['\"]
   
   /* 
@@ -83,19 +83,21 @@ public class SpamLord {
     try {
       for(String line = input.readLine(); line != null; line = input.readLine()) {
     	  if (obfuscatePattern.matcher(line).matches()) {
-        	System.out.println("huzzah!");
         	m = obfuscatePattern.matcher(line);
+        	
         	while(m.find()) {
         		email = m.group(2) + "@" + m.group(1);
         		Contact contact = new Contact(fileName,"e",email);
                 contacts.add(contact);
         	}
         } else {
+        	line = line.replaceAll("-", "");
         	m = myFirstPattern.matcher(line);
         	while(m.find()) {
         		String domain = m.group(6);
         		domain = domain.replaceAll(dotfinder, ".");
-        		email = m.group(2) + "@" + domain + ".edu";
+        		String tld = m.group(11);
+        		email = m.group(2) + "@" + domain + "." + tld;
         		Contact contact = new Contact(fileName,"e",email);
                 contacts.add(contact);
         	}
