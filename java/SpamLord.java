@@ -65,6 +65,8 @@ public class SpamLord {
   private String dotfinder = "\\s(dot|dt|DOT|DOM|dom)\\s|\\s?;\\s?";
   private Pattern myFirstPattern = Pattern.compile("(^|\\b)([a-z0-9][\\w\\.]+)(\\s?\\(followed\\sby\\s(&ldquo;|\"))?\\s?(&#x40;|WHERE|@|\\sat\\s)\\s?(("+dotfinder+"|[\\w\\.])+)("+dotfinder+"|\\s?\\.\\s?)(edu|EDU|com)");
   private Pattern obfuscatePattern = Pattern.compile("obfuscate\\(['\"]([\\w\\.]+)['\"],\\s?['\"]([\\w\\.]+)");
+  private Pattern spacePattern = Pattern.compile("(^|\\b)([a-z0-9][\\s\\w\\.]+)\\sat\\s([\\w\\s]+)\\s(edu|EDU)");
+  private Pattern phoneMatcher = Pattern.compile("\\(?([1-9](\\d\\s?{2})\\)?(\\s|-|\\.)*((\\d\\s?){3})(\\s|-|\\.)*((\\d){4})");
   // (^|\b)([a-z0-9][\w\.]+)(\s?\(followed\sby\s(&ldquo;|"))?\s?(&#x40;|WHERE|@|\sat\s)\s?(\s(dot|DOT|DOM|dom|)\s|\s?;\s?|\s?\.\s?|([\w\.]+)+)+(\s(dot|DOT|DOM|dom)\s?;\s?|\s?\.\s?|\s)(edu|EDU)
   // obfuscate\(['\"]([\w\.]+)['\"],\s?['\"]([\w\.]+)['\"]
   
@@ -80,17 +82,37 @@ public class SpamLord {
     // for each line
     Matcher m;
     String email;
+    String phone;
     try {
       for(String line = input.readLine(); line != null; line = input.readLine()) {
-    	  if (obfuscatePattern.matcher(line).matches()) {
         	m = obfuscatePattern.matcher(line);
-        	
+
         	while(m.find()) {
         		email = m.group(2) + "@" + m.group(1);
         		Contact contact = new Contact(fileName,"e",email);
                 contacts.add(contact);
+                continue;
         	}
-        } else {
+        	m = phoneMatcher.matcher(line);
+
+        	while(m.find()) {
+            for(int i = 0; i< 8; i++) {
+              System.out.println(m.group(i));
+            }
+            System.out.println("---------");
+            phone = m.group(1) + "-" + m.group(4) + "-" + m.group(7);
+            Contact contact = new Contact(fileName,"p",phone);
+                contacts.add(contact);
+        	}
+          //m = spacePattern.matcher(line);
+
+          //while(m.find()) {
+            //System.out.println("Here");
+            //email = m.group(2) + "@" + m.group(3).replace("\\s", "") + ".edu";
+            //Contact contact = new Contact(fileName,"e",email);
+                //contacts.add(contact);
+                //continue;
+          //}
         	line = line.replaceAll("-", "");
         	m = myFirstPattern.matcher(line);
         	while(m.find()) {
@@ -101,7 +123,6 @@ public class SpamLord {
         		Contact contact = new Contact(fileName,"e",email);
                 contacts.add(contact);
         	}
-        }
       }
       input.close();
     } catch(IOException e) {
