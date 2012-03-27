@@ -66,7 +66,7 @@ public class SpamLord {
   private Pattern myFirstPattern = Pattern.compile("(^|\\b)([a-z0-9][\\w\\.]+)(\\s?\\(followed\\sby\\s(&ldquo;|\"))?\\s?(&#x40;|WHERE|@|\\sat\\s)\\s?(("+dotfinder+"|[\\w\\.])+)("+dotfinder+"|\\s?\\.\\s?)(edu|EDU|com)");
   private Pattern obfuscatePattern = Pattern.compile("obfuscate\\(['\"]([\\w\\.]+)['\"],\\s?['\"]([\\w\\.]+)");
   private Pattern spacePattern = Pattern.compile("(^|\\b)([a-z0-9][\\s\\w\\.]+)\\sat\\s([\\w\\s]+)\\s(edu|EDU)");
-  private Pattern phoneMatcher = Pattern.compile("\\(?([1-9](\\d\\s?{2})\\)?(\\s|-|\\.)*((\\d\\s?){3})(\\s|-|\\.)*((\\d){4})");
+  private Pattern phoneMatcher = Pattern.compile("\\(?([1-9]\\d{2})\\)?(\\s|-|\\.)*((\\d\\s?){3})(\\s|-|\\.)*((\\d){4})");
   // (^|\b)([a-z0-9][\w\.]+)(\s?\(followed\sby\s(&ldquo;|"))?\s?(&#x40;|WHERE|@|\sat\s)\s?(\s(dot|DOT|DOM|dom|)\s|\s?;\s?|\s?\.\s?|([\w\.]+)+)+(\s(dot|DOT|DOM|dom)\s?;\s?|\s?\.\s?|\s)(edu|EDU)
   // obfuscate\(['\"]([\w\.]+)['\"],\s?['\"]([\w\.]+)['\"]
   
