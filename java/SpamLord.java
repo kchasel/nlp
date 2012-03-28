@@ -96,23 +96,22 @@ public class SpamLord {
         	m = phoneMatcher.matcher(line);
 
         	while(m.find()) {
-            for(int i = 0; i< 7; i++) {
-              System.out.println(m.group(i));
-            }
-            System.out.println("---------");
             phone = m.group(1) + "-" + m.group(3) + "-" + m.group(5);
             Contact contact = new Contact(fileName,"p",phone);
                 contacts.add(contact);
         	}
-          //m = spacePattern.matcher(line);
+          m = spacePattern.matcher(line);
 
-          //while(m.find()) {
-            //System.out.println("Here");
-            //email = m.group(2) + "@" + m.group(3).replace("\\s", "") + ".edu";
-            //Contact contact = new Contact(fileName,"e",email);
-                //contacts.add(contact);
-                //continue;
-          //}
+          while(m.find()) {
+            for(int i = 0; i < 5; i++) {
+              System.out.println(m.group(i));
+            }
+            System.out.println("----------");
+            email = m.group(2) + "@" + m.group(3).replace("\\s", ".") + ".edu";
+            Contact contact = new Contact(fileName,"e",email);
+                contacts.add(contact);
+                continue;
+          }
         	line = line.replaceAll("-", "");
         	m = myFirstPattern.matcher(line);
         	while(m.find()) {
